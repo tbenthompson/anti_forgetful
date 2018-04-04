@@ -1,0 +1,9 @@
+version: '3'
+services: 
+    jupyterlab:
+        image: "jupyter/datascience-notebook"
+        ports:
+            - 8888:8888
+        volumes:
+            - .:/home/jovyan
+        command: start.sh jupyter lab
