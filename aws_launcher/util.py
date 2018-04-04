@@ -1,3 +1,5 @@
+import os
+import sys
 import argparse
 import subprocess
 import importlib
@@ -16,6 +18,7 @@ def handle_cfg():
 
     args = parser.parse_args()
 
+    sys.path.insert(0, os.getcwd())
     cfg_module = importlib.import_module(args.cfg)
     for k, v in args._get_kwargs():
         cfg_module.__dict__[k] = v

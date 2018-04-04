@@ -1,6 +1,6 @@
 import time
 import boto3
-from util import handle_cfg, run
+from .util import handle_cfg, run
 
 class SessionInstance:
     def __init__(self, cfg, image_id):
@@ -38,6 +38,7 @@ class SessionInstance:
     def run_cmd(self, remote_cmd):
         pdns = self.instance.public_dns_name
         base_ssh = ['ssh']
+        # https://serverfault.com/questions/132970/can-i-automatically-add-a-new-host-to-known-hosts
         if self.cfg.no_strict_host_checking:
             base_ssh += ['-o', 'StrictHostKeyChecking=no']
         return run(' '.join(
@@ -50,15 +51,10 @@ class SessionInstance:
 
     def copy_to_remote(self, filepath, dest_filepath = '~/'):
         pdns = self.instance.public_dns_name
-        base_scp = ['scp', '-r']
-        if self.cfg.no_strict_host_checking:
-            base_scp += ['-o', 'StrictHostKeyChecking=no']
-        run(' '.join(
-            base_scp + ['-i', '%s.pem' % self.cfg.key_pair_name,
-                filepath,
-                'ec2-user@%s:%s' % (pdns, dest_filepath)
-            ]
-        ))
+        run(' '.join([
+            'scp', '-r', '-i', '%s.pem' % self.cfg.key_pair_name,
+            filepath, 'ec2-user@%s:%s' % (pdns, dest_filepath)
+        ]))
 
     def wait_until_ssh_accessible(self):
         while self.run_cmd('echo "Checking if instance is up and running"') != 0:
@@ -82,7 +78,7 @@ class SessionInstance:
         # It is critical to wait for the image to be created before returning,
         # because otherwise the instance might be terminated while the image is
         # still being created. That results in a broken image
-        print('Waiting for instance image to be created')
+        print('Waiting for instance image to be created', end = '')
         while True:
             time.sleep(2)
             image.reload()

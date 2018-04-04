@@ -1,7 +1,6 @@
 key_pair_name = 'tutorial_key_pair'
 group_name = 'tutorial_group'
 instance_type = 't2.micro'
-# https://serverfault.com/questions/132970/can-i-automatically-add-a-new-host-to-known-hosts
 no_strict_host_checking = True
 
 #create_ami options
