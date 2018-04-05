@@ -12,16 +12,17 @@ class SessionInstance:
         self.ec2_resource = boto3.resource('ec2')
         if self.instance_id is None:
             self.create_instance()
+            print('Creating instance: ', self.instance.id)
         else:
             self.start_instance()
+            print('Starting instance: ', self.instance.id)
         try:
-            print('Creating instance: ', self.instance.id)
-            print('Waiting for instance to initialize')
+            print('Waiting for instance to boot up')
             self.instance.wait_until_running()
             self.instance.reload()
             self.wait_until_ssh_accessible()
         except:
-            self.instance.terminate()
+            self.__exit__(self, None, None, None)
             raise
         return self
 
@@ -39,11 +40,19 @@ class SessionInstance:
             MinCount = 1, MaxCount = 1,
             InstanceType = self.cfg.instance_type,
             SecurityGroups = [self.cfg.group_name],
-            KeyName = self.cfg.key_pair_name
+            KeyName = self.cfg.key_pair_name,
+            TagSpecifications=[{
+                'ResourceType': 'instance',
+                'Tags': [{'Key': 'Name', 'Value': self.cfg.instance_name}]
+            }],
         )[0]
 
     def start_instance(self):
         self.instance = self.ec2_resource.Instance(self.instance_id)
+        if self.instance.state['Name'] == 'stopping':
+            print('Instance is currently stopping. Waiting until it is stopped to restart.')
+            self.instance.wait_until_stopped()
+            self.instance.reload()
         self.instance.start()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -78,28 +87,6 @@ class SessionInstance:
         pdns = self.instance.public_dns_name
         cmd = 'ssh -i %s.pem ec2-user@%s' % (self.cfg.key_pair_name, pdns)
         return run(cmd)
-
-    def save_to_image(self, image_name):
-        image = self.instance.create_image(
-            Description = 'string',
-            DryRun = False,
-            Name = image_name,
-            # If we don't reboot when making an image, pieces of the image
-            # will be seriously broken. Files will just be missing, etc.
-            NoReboot = False
-        )
-
-        # It is critical to wait for the image to be created before returning,
-        # because otherwise the instance might be terminated while the image is
-        # still being created. That results in a broken image
-        print('Waiting for instance image to be created', end = '')
-        while True:
-            time.sleep(2)
-            image.reload()
-            print('.', end = '', flush = True)
-            if image.state == 'available':
-                break
-        print('Created new image:', image.id)
 
 if __name__ == "__main__":
     main()

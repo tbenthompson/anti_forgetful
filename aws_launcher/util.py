@@ -28,11 +28,3 @@ def run(cmd):
     print('running', cmd)
     out = subprocess.run(cmd, shell = True)
     return out.returncode
-
-def get_image_id(image_name):
-    ec2_resource = boto3.resource('ec2')
-    images = ec2_resource.images.filter(Owners=['self'])
-    for i in images:
-        if i.name == image_name:
-            return i.id
-    return None

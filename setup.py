@@ -8,8 +8,11 @@ setup(
     entry_points = {
         'console_scripts': [
             'awslaunch = aws_launcher.launch:main',
-            'createami = aws_launcher.create_ami:main',
-            'terminate_all_instances = aws_launcher.terminate_all_instances:main'
+            'awsterminate = aws_launcher.terminate:main'
         ]
-    }
+    },
+
+    name = 'aws_launcher',
+    version = '18.04.05',
+    description = '',
 )
