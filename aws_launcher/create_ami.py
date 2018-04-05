@@ -7,10 +7,27 @@ def main():
     cfg = handle_cfg()
     create_key_pair(cfg.key_pair_name)
     create_security_group(cfg.group_name)
-    with SessionInstance(cfg, cfg.base_image_id) as s:
-        install_docker(s)
-        cfg.setup_images(s)
-        s.save_to_image(cfg.image_name)
+    with SessionInstance(cfg, image_id = cfg.base_image_id) as s:
+        s.ssh()
+        # install_docker(s)
+        # cfg.setup_images(s)
+        # s.save_to_image(cfg.image_name)
+
+def create_volume(cfg):
+    ec2_resource = boto3.resource('ec2')
+    ec2_client = boto3.client('ec2')
+    response = ec2_client.describe_availability_zones()
+    zone = response['AvailabilityZones'][0]['ZoneName']
+    volume = ec2_resource.create_volume(
+        AvailabilityZone = zone,
+        Size = cfg.root_volume_size,
+        VolumeType = 'gp2',
+        TagSpecifications=[{
+            'ResourceType': 'volume',
+            'Tags': [{'Key': 'Name', 'Value': cfg.volume_name}]
+        }]
+    )
+    pass
 
 def create_key_pair(key_pair_name):
     try:

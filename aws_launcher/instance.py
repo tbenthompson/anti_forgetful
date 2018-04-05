@@ -3,24 +3,17 @@ import boto3
 from .util import handle_cfg, run
 
 class SessionInstance:
-    def __init__(self, cfg, image_id):
+    def __init__(self, cfg, instance_id = None, image_id = None):
         self.cfg = cfg
         self.image_id = image_id
+        self.instance_id = instance_id
 
     def __enter__(self):
         self.ec2_resource = boto3.resource('ec2')
-        self.instance = self.ec2_resource.create_instances(
-            BlockDeviceMappings = [
-                {"DeviceName": "/dev/xvda", "Ebs" : {
-                    "VolumeSize": self.cfg.root_volume_size
-                }}
-            ],
-            ImageId = self.image_id,
-            MinCount = 1, MaxCount = 1,
-            InstanceType = self.cfg.instance_type,
-            SecurityGroups = [self.cfg.group_name],
-            KeyName = self.cfg.key_pair_name
-        )[0]
+        if self.instance_id is None:
+            self.create_instance()
+        else:
+            self.start_instance()
         try:
             print('Creating instance: ', self.instance.id)
             print('Waiting for instance to initialize')
@@ -32,8 +25,29 @@ class SessionInstance:
             raise
         return self
 
+    def create_instance(self):
+        self.instance = self.ec2_resource.create_instances(
+            BlockDeviceMappings = [
+                {
+                    "DeviceName": "/dev/xvda",
+                    "Ebs" : {
+                        "VolumeSize": self.cfg.root_volume_size
+                    }
+                }
+            ],
+            ImageId = self.image_id,
+            MinCount = 1, MaxCount = 1,
+            InstanceType = self.cfg.instance_type,
+            SecurityGroups = [self.cfg.group_name],
+            KeyName = self.cfg.key_pair_name
+        )[0]
+
+    def start_instance(self):
+        self.instance = self.ec2_resource.Instance(self.instance_id)
+        self.instance.start()
+
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.instance.terminate()
+        self.instance.stop()
 
     def run_cmd(self, remote_cmd):
         pdns = self.instance.public_dns_name
