@@ -13,4 +13,5 @@ def setup_images(s):
     s.run_cmd('docker-compose pull')
 
 def start_containers(s):
+    s.ssh_port_forward(8888, 8888)
     s.run_cmd('docker-compose up')

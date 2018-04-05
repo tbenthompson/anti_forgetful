@@ -79,6 +79,16 @@ class SessionInstance:
             filepath, 'ec2-user@%s:%s' % (pdns, dest_filepath)
         ]))
 
+    def ssh_port_forward(self, local_port, remote_port):
+        pdns = self.instance.public_dns_name
+        run(' '.join([
+            'ssh', '-i', '%s.pem' % self.cfg.key_pair_name,
+            '-L', '%s:localhost:%s' % (local_port, remote_port),
+            'ec2-user@%s' % pdns,
+            '-f', '-N'
+        ]))
+
+
     def wait_until_ssh_accessible(self):
         while self.run_cmd('echo "Checking if instance is up and running"') != 0:
             print('Retrying ssh')
