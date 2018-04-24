@@ -23,7 +23,9 @@ Now, check out the `example` folder for an example of how to launch a Jupyter no
 anti_forgetful awscfg
 ```
 
-This tells the launcher to use `awscfg.py` as your configuration file and starts to build your instance. It'll take a few minutes on a free `t2.micro` instance. After a few
+This tells the launcher to use `awscfg.py` as your configuration file and starts to build your instance. It'll take a few minutes on a free `t2.micro` instance and will eventually launch a Jupyter notebook that is viewable on your local machine at [http://localhost:8888/](http://localhost:8888/) via a ssh tunnel.
+
+(Note: you specify configuration files **without** the .py at the end.)
 
 # So how do I write on of these configuration files!
 
