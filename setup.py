@@ -1,18 +1,20 @@
 from setuptools import setup
 
+version = open('VERSION').read()
+
 setup(
-    packages = ['aws_launcher'],
+    packages = ['anti_forgetful'],
 
     install_requires = ['boto3'],
     zip_safe = False,
     entry_points = {
         'console_scripts': [
-            'awslaunch = aws_launcher.launch:main',
-            'awsterminate = aws_launcher.terminate:main'
+            'rememberlaunch = anti_forgetful.launch:main',
+            'awsterminate = anti_forgetful.terminate:main'
         ]
     },
 
-    name = 'aws_launcher',
-    version = '18.04.05',
+    name = 'anti_forgetful',
+    version = version,
     description = '',
 )
