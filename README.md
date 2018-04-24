@@ -4,7 +4,7 @@
 
 Please let me know if you have issues!
 
-# Just tell me how to use it!
+# Just tell me how to use it.
 
 First, if you haven't used AWS before:
 
@@ -29,7 +29,7 @@ This tells the launcher to use `awscfg.py` as your configuration file and starts
 
 Once you're done playing with the instance, just go to the terminal where you ran `anti_forgetful` and hit Ctrl-C. It'll kill the Jupyter Lab process and then disconnect and shutdown the instance. The instance will not be terminated, so you can launch it again later without losing data.
 
-# So how do I write on of these configuration files!
+# So how do I write one of these configuration files?
 
 The configuration is specified as a Python file: 
 
