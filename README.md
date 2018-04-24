@@ -8,13 +8,19 @@ Please let me know if you have issues!
 
 First, if you haven't used AWS before:
 
-1) set up your account
+1) Set up your AWS account.
 2) Follow the first two steps ("Install the AWS CLI" and "Configure the AWS CLI") [here](https://docs.aws.amazon.com/cli/latest/userguide/tutorial-ec2-ubuntu.html).
+
+Next, install `anti_forgetful`:
+
+```
+pip install anti_forgetful
+```
 
 Now, check out the `example` folder for an example of how to launch a Jupyter notebook server. To start building your instance, move to that directory and run:
 
 ```
-rememberaws awscfg
+anti_forgetful awscfg
 ```
 
 This tells the launcher to use `awscfg.py` as your configuration file and starts to build your instance. It'll take a few minutes on a free `t2.micro` instance. After a few
@@ -72,3 +78,5 @@ The `awsterminate` command will list all the instances you currently have runnin
 # Miscellaneous
 
 At the moment, this is pretty completely integrated with Docker. That could easily be changed.
+
+I've only tried this on Ubuntu with Python 3.5 and Python 3.6.
