@@ -3,3 +3,4 @@ tags
 *.pem
 __pycache__
 *.egg-info
+dist
