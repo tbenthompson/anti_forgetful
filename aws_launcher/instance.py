@@ -22,7 +22,7 @@ class SessionInstance:
             self.instance.reload()
             self.wait_until_ssh_accessible()
         except:
-            self.__exit__(self, None, None, None)
+            self.__exit__(None, None, None)
             raise
         return self
 
@@ -56,6 +56,7 @@ class SessionInstance:
         self.instance.start()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        print('Stopping instance...')
         self.instance.stop()
 
     def run_cmd(self, remote_cmd):
