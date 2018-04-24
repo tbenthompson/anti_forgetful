@@ -8,7 +8,7 @@ Please let me know if you have issues!
 
 First, if you haven't used AWS before:
 
-1) set up your account
+1) Set up your AWS account.
 2) Follow the first two steps ("Install the AWS CLI" and "Configure the AWS CLI") [here](https://docs.aws.amazon.com/cli/latest/userguide/tutorial-ec2-ubuntu.html).
 
 Next, install `anti_forgetful`:
