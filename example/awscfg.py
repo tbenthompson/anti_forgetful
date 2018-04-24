@@ -1,6 +1,5 @@
 key_pair_name = 'tutorial_key_pair'
 group_name = 'tutorial_group'
-volume_name = 'abc'
 instance_type = 't2.micro'
 no_strict_host_checking = True
 

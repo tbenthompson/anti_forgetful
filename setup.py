@@ -15,7 +15,7 @@ setup(
     zip_safe = False,
     entry_points = {
         'console_scripts': [
-            'rememberlaunch = anti_forgetful.launch:main',
+            'rememberaws = anti_forgetful.launch:main',
             'awsterminate = anti_forgetful.terminate:main'
         ]
     },

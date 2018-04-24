@@ -47,6 +47,10 @@ class SessionInstance:
             }],
         )[0]
 
+    def wait_until_ssh_accessible(self):
+        while self.run_cmd('echo "Checking if instance is up and running"') != 0:
+            print('Retrying ssh')
+
     def start_instance(self):
         self.instance = self.ec2_resource.Instance(self.instance_id)
         if self.instance.state['Name'] == 'stopping':
@@ -88,11 +92,6 @@ class SessionInstance:
             'ec2-user@%s' % pdns,
             '-f', '-N'
         ]))
-
-
-    def wait_until_ssh_accessible(self):
-        while self.run_cmd('echo "Checking if instance is up and running"') != 0:
-            print('Retrying ssh')
 
     def ssh(self):
         pdns = self.instance.public_dns_name
