@@ -27,6 +27,8 @@ This tells the launcher to use `awscfg.py` as your configuration file and starts
 
 (Note: you specify configuration files **without** the .py at the end.)
 
+Once you're done playing with the instance, just go to the terminal where you ran `anti_forgetful` and hit Ctrl-C. It'll kill the Jupyter Lab process and then disconnect and shutdown the instance. The instance will not be terminated, so you can launch it again later without losing data.
+
 # So how do I write on of these configuration files!
 
 The configuration is specified as a Python file: 
