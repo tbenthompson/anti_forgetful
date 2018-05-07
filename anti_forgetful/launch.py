@@ -13,7 +13,7 @@ def main():
         cfg.start_containers(s)
 
 def get_instance_id(cfg):
-    ec2_resource = boto3.resource('ec2')
+    ec2_resource = boto3.resource('ec2', cfg.region)
     for i in ec2_resource.instances.all():
         if i.tags == None:
             continue
@@ -28,16 +28,16 @@ def get_instance_id(cfg):
     return None
 
 def setup_instance(cfg):
-    create_key_pair(cfg.key_pair_name)
-    create_security_group(cfg.group_name)
+    create_key_pair(cfg.key_pair_name, cfg.region)
+    create_security_group(cfg.group_name, cfg.region)
     with SessionInstance(cfg, image_id = cfg.base_image_id) as s:
         install_docker(s)
         cfg.setup_images(s)
         return s.instance.id
 
-def create_key_pair(key_pair_name):
+def create_key_pair(key_pair_name, region):
     try:
-        ec2_resource = boto3.resource('ec2')
+        ec2_resource = boto3.resource('ec2', region)
         response = ec2_resource.create_key_pair(KeyName = key_pair_name)
         assert(response.name == key_pair_name)
         filename = key_pair_name + '.pem'
@@ -46,8 +46,8 @@ def create_key_pair(key_pair_name):
     except ClientError as e:
         print(e)
 
-def create_security_group(group_name):
-    ec2_client = boto3.client('ec2')
+def create_security_group(group_name, region):
+    ec2_client = boto3.client('ec2', region)
     response = ec2_client.describe_vpcs()
     vpc_id = response.get('Vpcs', [{}])[0].get('VpcId', '')
 

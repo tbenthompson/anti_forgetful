@@ -1,6 +1,7 @@
 key_pair_name = 'tutorial_key_pair'
 group_name = 'tutorial_group'
 instance_type = 't2.micro'
+region = 'us-east-2'
 no_strict_host_checking = True
 
 base_image_id = 'ami-428aa838'

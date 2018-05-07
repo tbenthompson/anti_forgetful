@@ -5,11 +5,12 @@ from .util import handle_cfg, run
 class SessionInstance:
     def __init__(self, cfg, instance_id = None, image_id = None):
         self.cfg = cfg
+        self.region = region
         self.image_id = image_id
         self.instance_id = instance_id
 
     def __enter__(self):
-        self.ec2_resource = boto3.resource('ec2')
+        self.ec2_resource = boto3.resource('ec2', self.region)
         if self.instance_id is None:
             self.create_instance()
             print('Creating instance: ', self.instance.id)
