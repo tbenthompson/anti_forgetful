@@ -2,6 +2,7 @@ key_pair_name = 'tutorial_key_pair'
 group_name = 'tutorial_group'
 instance_type = 't2.micro'
 no_strict_host_checking = True
+metric_monitoring = False
 
 base_image_id = 'ami-428aa838'
 root_volume_size = 30 # In GB
