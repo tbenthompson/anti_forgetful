@@ -19,8 +19,9 @@ class SessionInstance:
             print('Starting instance: ', self.instance.id)
         try:
             print('Waiting for instance to boot up')
-            self.metric_monitor = MetricMonitor(self.instance_id)
-            self.metric_monitor.start()
+            if self.cfg.metric_monitoring:
+                self.metric_monitor = MetricMonitor(self.instance_id)
+                self.metric_monitor.start()
             self.instance.wait_until_running()
             self.instance.reload()
             self.wait_until_ssh_accessible()
