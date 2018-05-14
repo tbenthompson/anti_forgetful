@@ -47,6 +47,11 @@ instance_type = 't2.micro'
 # launching your instance.
 no_strict_host_checking = True
 
+# Metric monitoring will track the total amount of resources your instance has 
+# consumed.  This option is False by default, set to True, to monitor resource
+# usage
+metric_monitoring = False
+
 # The base image to build from. You probably shouldn't change this. 
 base_image_id = 'ami-428aa838'
 

@@ -2,6 +2,7 @@ import boto3
 from botocore.exceptions import ClientError
 from .instance import SessionInstance
 from .util import handle_cfg
+import os
 
 def main():
     cfg = handle_cfg()
@@ -43,6 +44,7 @@ def create_key_pair(key_pair_name):
         filename = key_pair_name + '.pem'
         print('saving ' + key_pair_name + ' to ' + filename)
         open(filename, 'w').write(response.key_material)
+        os.chmod(filename, 0o600)
     except ClientError as e:
         print(e)
 

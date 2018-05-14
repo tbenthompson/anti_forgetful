@@ -1,6 +1,7 @@
-import time
 import boto3
 from .util import handle_cfg, run
+from .metrics import MetricMonitor, Metric, NetworkIn
+
 
 class SessionInstance:
     def __init__(self, cfg, instance_id = None, image_id = None):
@@ -18,6 +19,9 @@ class SessionInstance:
             print('Starting instance: ', self.instance.id)
         try:
             print('Waiting for instance to boot up')
+            if self.cfg.metric_monitoring:
+                self.metric_monitor = MetricMonitor(self.instance_id)
+                self.metric_monitor.start()
             self.instance.wait_until_running()
             self.instance.reload()
             self.wait_until_ssh_accessible()
@@ -46,6 +50,7 @@ class SessionInstance:
                 'Tags': [{'Key': 'Name', 'Value': self.cfg.instance_name}]
             }],
         )[0]
+        self.instance_id = self.instance.id
 
     def wait_until_ssh_accessible(self):
         while self.run_cmd('echo "Checking if instance is up and running"') != 0:
@@ -61,6 +66,7 @@ class SessionInstance:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print('Stopping instance...')
+        self.metric_monitor.instance_up = False
         self.instance.stop()
 
     def run_cmd(self, remote_cmd):
